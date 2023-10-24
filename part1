@@ -1,0 +1,73 @@
+from io import TextIOWrapper
+from typing import List, Dict, Tuple
+RANK_INDEX = 0
+NAME_INDEX = 1
+COUNTRY_INDEX = 2
+RATING_INDEX = 3
+BIRTH_YEAR_INDEX = 4
+
+COUNTRY_TABLE_HEADER = 'Player by country: '
+
+def main():
+    data_list = open_file()
+    grouped_data = group_into_dict_by(key_index=COUNTRY_INDEX, data_list=data_list)
+    print_table(COUNTRY_TABLE_HEADER, grouped_data)
+
+
+
+def open_file() -> List[str]:
+    '''Asks the user for input and opens a file using it.
+    Returns a list of strings where each element is a line in the file'''
+    # filename = input()
+    filename = 'chess-top-100.csv'
+    with open(filename) as file:
+        return read_file(file)
+
+
+#list == LIST[str]
+def read_file(file: TextIOWrapper) -> List[str]:
+    '''Reads the file and returns a list of string, 
+    where each element is a line in the file'''
+    lines = []
+    for line in file:
+        line = line.strip()
+        lines.append(line)
+    return lines
+
+
+def group_into_dict_by(key_index: int, data_list: List[str] ) -> Dict[str, List[Tuple[str, int]]]:
+    grouped_dict: Dict[str, List[Tuple[str, int]]] = {}
+    for data in data_list:
+        data = data.split('; ')
+        key = data[key_index]
+        player_entry = (data[NAME_INDEX], int(data[RATING_INDEX]))
+        if key in grouped_dict:
+            grouped_dict[key].append(value)
+        else:
+            grouped_dict[key] = [value]
+    print(grouped_dict)
+    return grouped_dict
+
+def find_average_elo(player: List[Tuple[str, int]]) -> float:
+    total_rating = 0
+    for player in players:
+        name, rating = players
+        total_rating += rating
+        return total_rating/len(values)
+    
+def print_table(table_header: str, grouped_data: Dict[str, List[Tuple[str, int]]]):
+    print(table_header)
+    print('-' * len(table_header))
+    
+    for key, values in sorted(grouped_data.items()):
+        average_elo = find_average_elo(values)
+        print(f"{key} ({len(values)}) ({average_elo:.1f}) :")
+        for value in values:
+            full_name, rating = value
+            last_name, first_name = full_name.split(', ')
+            formatted_name = f'{first_name} {last_name}'
+            print(f'{formatted_name:>40},{rating:>10}')
+
+
+if __name__ == "__main__":
+    main()
